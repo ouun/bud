@@ -1,0 +1,33 @@
+name: Release nightly version
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * *'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+
+      - name: Cache
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
+
+      - name: Restore
+        uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
