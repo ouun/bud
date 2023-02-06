@@ -30,6 +30,7 @@ module.exports = [
       `use`,
       `forward`,
       `layer`,
+      `config`,
     ],
   },
 ]
